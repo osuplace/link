@@ -1,0 +1,29 @@
+{
+  "name": "link",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "repository": "https://github.com/osuplace/link",
+  "author": "April <april@dummy.cafe>",
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "yarn@4.1.1",
+  "dependencies": {
+    "@auth/core": "0.25.0",
+    "@auth/express": "^0.5.0",
+    "@types/cors": "^2.8.17",
+    "@types/ejs": "^3.1.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ."
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.28",
+    "typescript": "^5.4.2"
+  }
+}

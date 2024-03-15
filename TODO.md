@@ -1,0 +1,16 @@
+# TODO
+- [ ] Basic setup
+- [ ] Log in with Discord
+- [ ] Log in with osu!
+- [ ] Send connection metadata to Discord
+	- [ ] Platform name: `osu! (favorite ruleset) [country]`"
+	- [ ] Platform username: osu! username
+	- [ ] Metadata fields:
+		- Account creation date
+		- Favorite ruleset global rank
+		- Favorite ruleset country rank
+		- Favorite ruleset total PP
+		- Favorite ruleset play count
+- [ ] A way to refresh your details
+	- Slash command interactions?
+- [ ] Ratelimits
