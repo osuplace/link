@@ -14,3 +14,5 @@
 !.env.example
 /dist
 /data
+
+/node_modules

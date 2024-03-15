@@ -9,14 +9,11 @@ Link is a Discord Connection service to allow you to connect your osu! account t
 3. `yarn build`
 4. `yarn start`
 
-## Development setup
+Note: Unfortunately, because `@auth/express` uses an outdated version of `@auth/core` right now, there are a bunch of errors that you have to just ignore...
 
-This project uses Yarn plug-n-play, and comes with the required settings for VS Code. 
+## Development 
 
-- If you're using VS Code, make sure to *allow VS Code to use the workspace's TypeScript version* (you should get a notification regarding this the first time you open a TypeScript file).
-- If you're using a different editor, see the [Yarn Editor SDKs documentation](https://yarnpkg.com/getting-started/editor-sdks) and run the command you need (i.e. `yarn dlx @yarnpkg/sdks vim`).
-
-Note: The `@auth/core` requirement should be the same version as the `@auth/core` requirement within `@auth/express`!
+Note: The `@auth/core` requirement should be the same version across Link, `@auth/express`, and `@auth/prisma-adapter`!
 
 # License & Copyright
 
