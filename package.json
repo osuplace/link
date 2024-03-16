@@ -13,6 +13,7 @@
     "@auth/prisma-adapter": "1.2.0",
     "@prisma/client": "^5.11.0",
     "@types/ejs": "^3.1.5",
+    "cookie-parser": "^1.4.6",
     "discord-api-types": "^0.37.74",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.1",
@@ -31,6 +32,7 @@
     "db:studio": "dotenv -e .env -c -- prisma studio"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.28",
     "typescript": "^5.4.2"

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign in | <%= BRAND_NAME %></title>
+
+	<link rel="stylesheet" href="<%= BASE_URL %>/assets/styles/containered-page.css">
+</head>
+<body>
+	<div id="container">
+		<h1>
+			Connect your <%= providerFriendlyName %> account
+		</h1>
+		<p>
+			<%= BRAND_NAME %> won't use any data other than what we need to verify your identity and show your gameplay stats on your Discord profile.
+		</p>
+		<p>
+			This sign-in is powered by OAuth, meaning we won't be able to see your <%= providerFriendlyName %> sign-in credentials. We'll just send you to <%= providerFriendlyName %>, and then <%= providerFriendlyName %> will send us back the info we need.
+		</p>
+		<p>
+			See our <a href="<%= BASE_URL %>/privacy" target="_blank">privacy policy</a> for more info.
+		</p>
+		<form action="<%= BASE_URL %>/auth/signin/<%= providerId %>" method="POST">
+			<input type="hidden" name="csrfToken" value="<%= csrfToken %>" />
+			<input type="hidden" name="callbackUrl" value="<%= BASE_URL %>/link" />
+			<button type="submit">
+				<img src="<%= providerLogo %>" alt="" style="height: 2em; margin-right: 0.5em; filter: brightness(0) invert(1);" />
+				<span>Sign in with <%= providerFriendlyName %></span>
+			</button>
+		</form>
+	</div>
+</body>
+</html>

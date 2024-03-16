@@ -1,5 +1,8 @@
 export default function checkEnv(vars: string[] = [
-	'LINK_PORT', 'LINK_BASEURL', 'LINK_AUTH_SECRET',
+	'LINK_BRAND_NAME',
+	'LINK_PORT', 'LINK_BASEURL', 
+	
+	'LINK_AUTH_SECRET',
 	
 	'LINK_DISCORD_BOT_TOKEN', 
 	

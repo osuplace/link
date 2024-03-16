@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign in | <%= BRAND_NAME %></title>
+
+	<link rel="stylesheet" href="<%= BASE_URL %>/assets/styles/containered-page.css">
+	<script>
+		function showError(msg) {
+			if (document.readyState != 'complete') {
+				window.onload = () => {
+					document.getElementById('status').textContent = msg;
+				}
+			} else {
+				document.getElementById('status').textContent = msg;
+			}
+		}
+
+		// use fetch to make a request to /auth/csrf
+		fetch('<%= BASE_URL %>/auth/csrf')
+			.then(async (response) => {
+				if (response.ok) {
+					location.reload();
+				} else {
+					const err = await response.text();
+					showError(`An error occured while preparing sign-in. Please try again later. (${response.status} ${response.statusText}: ${err})`);
+				}
+			})
+			.catch(err => {
+				window.onload = () => {
+					showError(err);
+				}
+			});
+	</script>
+</head>
+<body style="cursor: wait">
+	<div id="container">
+		<p id="status">
+			Please wait... 
+			<noscript>
+				Sorry, this page requires JavaScript... Please enable JavaScript in your browser.
+			</noscript>
+		</p>
+	</div>
+</body>
+</html>

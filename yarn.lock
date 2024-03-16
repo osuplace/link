@@ -131,19 +131,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cookie-parser@npm:^1":
+  version: 1.4.7
+  resolution: "@types/cookie-parser@npm:1.4.7"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10c0/af37fea5399950e59ceb2e1f25c633f3df360c4f17e8b3f26418e672fe5c926a20993b86f8e1df72cfe2c4dc8967d9a18d3d78b5c6a5f751a297d0418e5690fa
+  languageName: node
+  linkType: hard
+
 "@types/cookie@npm:0.6.0":
   version: 0.6.0
   resolution: "@types/cookie@npm:0.6.0"
   checksum: 10c0/5b326bd0188120fb32c0be086b141b1481fec9941b76ad537f9110e10d61ee2636beac145463319c71e4be67a17e85b81ca9e13ceb6e3bb63b93d16824d6c149
-  languageName: node
-  linkType: hard
-
-"@types/cors@npm:^2.8.17":
-  version: 2.8.17
-  resolution: "@types/cors@npm:2.8.17"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/457364c28c89f3d9ed34800e1de5c6eaaf344d1bb39af122f013322a50bc606eb2aa6f63de4e41a7a08ba7ef454473926c94a830636723da45bf786df032696d
   languageName: node
   linkType: hard
 
@@ -166,7 +166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.21":
+"@types/express@npm:*, @types/express@npm:^4.17.21":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
   dependencies:
@@ -400,10 +400,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie-parser@npm:^1.4.6":
+  version: 1.4.6
+  resolution: "cookie-parser@npm:1.4.6"
+  dependencies:
+    cookie: "npm:0.4.1"
+    cookie-signature: "npm:1.0.6"
+  checksum: 10c0/9c2ade5459290802cd472a2d2a6e46fbd7de3e8514e02bfed5edfde892d77733c7f89d9d2015f752a9087680429b416972d7aba748bf6824e21eb680c8556383
+  languageName: node
+  linkType: hard
+
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
   checksum: 10c0/b36fd0d4e3fef8456915fcf7742e58fbfcc12a17a018e0eb9501c9d5ef6893b596466f03b0564b81af29ff2538fd0aa4b9d54fe5ccbfb4c90ea50ad29fe2d221
+  languageName: node
+  linkType: hard
+
+"cookie@npm:0.4.1":
+  version: 0.4.1
+  resolution: "cookie@npm:0.4.1"
+  checksum: 10c0/4d7bc798df3d0f34035977949cd6b7d05bbab47d7dcb868667f460b578a550cd20dec923832b8a3a107ef35aba091a3975e14f79efacf6e39282dc0fed6db4a1
   languageName: node
   linkType: hard
 
@@ -418,16 +435,6 @@ __metadata:
   version: 0.6.0
   resolution: "cookie@npm:0.6.0"
   checksum: 10c0/f2318b31af7a31b4ddb4a678d024514df5e705f9be5909a192d7f116cfb6d45cbacf96a473fa733faa95050e7cff26e7832bb3ef94751592f1387b71c8956686
-  languageName: node
-  linkType: hard
-
-"cors@npm:^2.8.5":
-  version: 2.8.5
-  resolution: "cors@npm:2.8.5"
-  dependencies:
-    object-assign: "npm:^4"
-    vary: "npm:^1"
-  checksum: 10c0/373702b7999409922da80de4a61938aabba6929aea5b6fd9096fefb9e8342f626c0ebd7507b0e8b0b311380744cc985f27edebc0a26e0ddb784b54e1085de761
   languageName: node
   linkType: hard
 
@@ -783,11 +790,11 @@ __metadata:
     "@auth/express": "npm:0.5.0"
     "@auth/prisma-adapter": "npm:1.2.0"
     "@prisma/client": "npm:^5.11.0"
-    "@types/cors": "npm:^2.8.17"
+    "@types/cookie-parser": "npm:^1"
     "@types/ejs": "npm:^3.1.5"
     "@types/express": "npm:^4.17.21"
     "@types/node": "npm:^20.11.28"
-    cors: "npm:^2.8.5"
+    cookie-parser: "npm:^1.4.6"
     discord-api-types: "npm:^0.37.74"
     dotenv: "npm:^16.4.5"
     dotenv-cli: "npm:^7.4.1"
@@ -894,13 +901,6 @@ __metadata:
   version: 2.10.3
   resolution: "oauth4webapi@npm:2.10.3"
   checksum: 10c0/a0b3bf177c2a1d98d1907cd6f5804be827e433dfff9951f1e2f3dabbcc178975ca2e55f6a0e0dc0b4b8fd2a881b1dd4d0aa86646f11db0e00f7c85af0c288c02
-  languageName: node
-  linkType: hard
-
-"object-assign@npm:^4":
-  version: 4.1.1
-  resolution: "object-assign@npm:4.1.1"
-  checksum: 10c0/1f4df9945120325d041ccf7b86f31e8bcc14e73d29171e37a7903050e96b81323784ec59f93f102ec635bcf6fa8034ba3ea0a8c7e69fa202b87ae3b6cec5a414
   languageName: node
   linkType: hard
 
@@ -1185,7 +1185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vary@npm:^1, vary@npm:~1.1.2":
+"vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
