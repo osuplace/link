@@ -476,6 +476,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"discord-api-types@npm:^0.37.74":
+  version: 0.37.74
+  resolution: "discord-api-types@npm:0.37.74"
+  checksum: 10c0/3a816034758db58120f50d5dc0fcd9a7f42895d76d582d73fcd5dd02e3992c68a6067cf5fa1465e747729a808355ec12a95d402146dc1d56db8f56e9c7067b1c
+  languageName: node
+  linkType: hard
+
 "dotenv-cli@npm:^7.4.1":
   version: 7.4.1
   resolution: "dotenv-cli@npm:7.4.1"
@@ -781,6 +788,7 @@ __metadata:
     "@types/express": "npm:^4.17.21"
     "@types/node": "npm:^20.11.28"
     cors: "npm:^2.8.5"
+    discord-api-types: "npm:^0.37.74"
     dotenv: "npm:^16.4.5"
     dotenv-cli: "npm:^7.4.1"
     ejs: "npm:^3.1.9"

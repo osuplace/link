@@ -4,7 +4,7 @@ import DiscordProvider, { DiscordProfile } from '@auth/express/providers/discord
 import OsuProvider, { OsuProfile } from '@auth/express/providers/osu';
 
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from './database.js';
+import { prisma } from '#link/instance/database.js';
 
 import { Request } from 'express';
 

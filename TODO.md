@@ -1,9 +1,11 @@
 # TODO
-- [ ] Basic setup
-- [ ] Log in with Discord
-- [ ] Log in with osu!
+- [x] Basic setup
+- [x] Log in with Discord
+- [x] Log in with osu!
+- [x] Script to register role metadata schema
 - [ ] Send connection metadata to Discord
 	- [ ] Platform name: `osu! (favorite ruleset) [country]`"
+		- [ ] If we can put emojis then put ⌨️🖊️💻🖱️ for playstyles and a flag emoji for country
 	- [ ] Platform username: osu! username
 	- [ ] Metadata fields:
 		- Account creation date
@@ -13,4 +15,9 @@
 		- Favorite ruleset play count
 - [ ] A way to refresh your details
 	- Slash command interactions?
+- [ ] Automatic refreshing of access tokens (with refresh token)
+	- [ ] If the access got revoked on either side, unlink and delete info about that user!
+	- [ ] Automatically update the connection metadata with new info
 - [ ] Ratelimits
+- [ ] Maybe osu.place landing can have a teeny tiny banner at the bottom for "Link by osu.place: Easily connect osu! accounts to your Discord server" and then maybe another one for hytc hehehehehhehehh
+- [ ] remove skipLibCheck

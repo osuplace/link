@@ -5,7 +5,10 @@
 		"esModuleInterop": true,
 		"noImplicitAny": true,
 		"outDir": "dist",
-		"rootDir": "src"
+		"rootDir": "src",
+		"paths": {
+			"#link/*": ["./src/*"]
+		}
 	},
 	"include": [
 		"src/**/*.ts"

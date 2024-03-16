@@ -4,10 +4,11 @@ Link is a Discord Connection service to allow you to connect your osu! account t
 
 ## Installation
 
-1. `yarn install`
+1. `yarn install` (install dependencies)
 2. Copy `.env.example` to `.env` and edit `.env` to configure the app
-3. `yarn build`
-4. `yarn start`
+3. `yarn build` (compile TS)
+4. `yarn register` (registers role metadata with Discord)
+5. `yarn start`
 
 Note: Unfortunately, because `@auth/express` uses an outdated version of `@auth/core` right now, there are a bunch of errors that you have to just ignore...
 

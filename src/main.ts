@@ -1,26 +1,17 @@
-// Misc imports
+// Set up environment variables
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 // Server imports
 import { default as express, Express, Request, Response, NextFunction } from 'express';
-import { default as cors } from 'cors';
 
 // Our imports
-import { auth, authConfig, getSession } from './auth.js';
-import { prisma } from './database.js';
+import { auth, authConfig, getSession } from '#link/instance/auth.js';
+import { prisma } from '#link/instance/database.js';
 
 // Check for environment variables
-if (process.env.LINK_PORT == undefined
-	|| process.env.LINK_BASEURL == undefined
-	|| process.env.LINK_AUTH_SECRET == undefined
-	|| process.env.LINK_DISCORD_CLIENT_ID == undefined
-	|| process.env.LINK_DISCORD_CLIENT_SECRET == undefined
-	|| process.env.LINK_OSU_CLIENT_ID == undefined
-	|| process.env.LINK_OSU_CLIENT_SECRET == undefined) {
-	console.error('Missing environment variables!');
-	process.exit();
-}
+import checkEnv from '#link/util/check-env.js';
+checkEnv();
 
 // Initialize Express
 let app = express();
@@ -39,7 +30,10 @@ app.get('/link', (req, res) => {
 	// - Not logged in -> Send to osu! login
 	// - Logged in with osu! but not Discord (do osu! first so that we have the latest player data in case this is a refresh) -> Send to Discord login
 	// - Logged in with both Discord (with valid token, get it from the database) and osu! -> send data to Discord and stuff, see https://discord.com/channels/297657542572507137/959453204163199056/1218260546168557650 (and then show "You can close this tab!")
-	
+	// POST /auth/signin
+
+	// TODO
+	// GO FIND THE DOCS FOR WHAT TO SEND TO /auth/signin DUMMY 
 });
 
 app.listen(process.env.PORT || 3000, () => {
