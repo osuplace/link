@@ -30,18 +30,26 @@ let authConfig: Omit<AuthConfig, "raw"> = {
 	session: {
 		strategy: 'database'
 	},
-	//pages: {
-	//	signIn: '/link'
-	//},
+	pages: {
+		signIn: '/link'
+	},
 	callbacks: {
-		signIn({ user, profile }) {
-			console.log('Waiter!! More profile please!!');
-			console.log(profile);
+		async signIn({ user, profile }) {
 			if (profile.kudosu != undefined) {
 				let osuProfile = profile as OsuProfile;
 				if (osuProfile.is_bot || osuProfile.is_deleted || osuProfile.is_restricted)	{
 					return false;
 				}
+				
+				user.osuCreationDate = osuProfile.join_date,
+				user.osuGlobalRank = osuProfile.statistics.global_rank,
+				user.osuCountryRank = osuProfile.statistics.country_rank,
+				user.osuTotalPP = osuProfile.statistics.pp,
+				user.osuPlayCount = osuProfile.statistics.play_count,
+
+				user.osuFavoriteRuleset = osuProfile.playmode,
+				user.osuPlaystyles = JSON.stringify(osuProfile.playstyle),
+				user.osuCountry = osuProfile.country.code
 				// TODO
 				// Ok April! Here's what you Gotta Do! 
 				// schema.prisma → update user to add fields for the stuff we want from osu

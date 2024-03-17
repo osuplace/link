@@ -13,6 +13,10 @@
 		- Favorite ruleset country rank
 		- Favorite ruleset total PP
 		- Favorite ruleset play count
+- [ ] Make auth pages
+	- [ ] Error
+	- [ ] Sign out
+	- [ ] The other ones?
 - [ ] A way to refresh your details
 	- Slash command interactions?
 - [ ] Automatic refreshing of access tokens (with refresh token)
