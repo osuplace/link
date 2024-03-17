@@ -4,11 +4,18 @@ Link is a Discord Connection service to allow you to connect your osu! account t
 
 ## Installation
 
+0. `git clone --recurse-submodules https://github.com/osuplace/link && cd link`
 1. `yarn install` (install dependencies)
-2. Copy `.env.example` to `.env` and edit `.env` to configure the app
-3. `yarn build` (compile TS)
-4. `yarn register` (registers role metadata with Discord)
-5. `yarn start`
+2. Build Auth.js:
+	a. `cd auth.js`
+	b. `pnpm install && pnpm build`
+	c. This is gonna take like 5 minutes so go get a snack in the meantime :3
+	d. Change all the dependencies that use `workspace:` in `packages/frameworks-express` and `packages/adapter-prisma` to use `file:` relative paths instead (i.e. `file:../core`).
+3. Copy `.env.example` to `.env` and edit `.env` to configure the app
+4. `yarn db:push` (push database schema)
+5. `yarn build` (compile TypeScript)
+6. `yarn register` (registers role metadata with Discord)
+7. `yarn start`
 
 Note: Unfortunately, because `@auth/express` uses an outdated version of `@auth/core` right now, there are a bunch of errors that you have to just ignore...
 

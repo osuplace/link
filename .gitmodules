@@ -1,0 +1,3 @@
+[submodule "auth.js"]
+	path = auth.js
+	url = https://github.com/april83c/auth.js.git

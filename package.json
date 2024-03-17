@@ -8,9 +8,9 @@
   "license": "AGPL-3.0-or-later",
   "packageManager": "yarn@4.1.1",
   "dependencies": {
-    "@auth/core": "0.25.0",
-    "@auth/express": "0.5.0",
-    "@auth/prisma-adapter": "1.2.0",
+    "@auth/core": "file:./auth.js/packages/core",
+    "@auth/express": "file:./auth.js/packages/frameworks-express",
+    "@auth/prisma-adapter": "file:./auth.js/packages/adapter-prisma",
     "@prisma/client": "^5.11.0",
     "@types/ejs": "^3.1.5",
     "cookie-parser": "^1.4.6",
