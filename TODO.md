@@ -3,16 +3,19 @@
 - [x] Log in with Discord
 - [x] Log in with osu!
 - [x] Script to register role metadata schema
-- [ ] Send connection metadata to Discord
-	- [ ] Platform name: `osu! (favorite ruleset) [country]`"
-		- [ ] If we can put emojis then put ⌨️🖊️💻🖱️ for playstyles and a flag emoji for country
-	- [ ] Platform username: osu! username
-	- [ ] Metadata fields:
+- [x] Send connection metadata to Discord
+	- [x] Platform name: `osu! (favorite ruleset) [country]`"
+		- [x] If we can put emojis then put ⌨️🖊️💻🖱️ for playstyles and a flag emoji for country
+	- [x] Platform username: osu! username
+	- [x] Metadata fields:
 		- Account creation date
 		- Favorite ruleset global rank
 		- Favorite ruleset country rank
 		- Favorite ruleset total PP
 		- Favorite ruleset play count
+- [ ] DiscordInfo
+	- Is in osu place?
+	- Reddit username
 - [ ] Make auth pages
 	- [ ] If /link gets a ?error=, show that ?error= (i.e. ?error=OAuthCallbackError), these are listed I think here? https://authjs.dev/reference/core/errors/#oauthcallbackerror
 	- [ ] Error
@@ -20,6 +23,7 @@
 	- [ ] The other ones?
 - [ ] A way to refresh your details
 	- Slash command interactions?
+- [ ] Slash commands (user installable)?
 - [ ] Automatic refreshing of access tokens (with refresh token)
 	- [ ] If the access got revoked on either side, unlink and delete info about that user!
 	- [ ] Automatically update the connection metadata with new info

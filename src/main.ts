@@ -12,9 +12,12 @@ import cookieParser from 'cookie-parser';
 
 // Our imports
 import { auth, authConfig, getSession } from '#link/instance/auth.js';
+import { OAuthConfig } from '@auth/express/providers';
+import { OsuProfile } from '@auth/express/providers/osu';
+import { DiscordProfile } from '@auth/express/providers/discord';
 import { prisma } from '#link/instance/database.js';
 import commonProps from '#link/util/common-props.js';
-import { PlayStyle, pushRoleMetadataForUser } from '#link/util/calls.js';
+import { PlayStyle, getOsuInfo, oAuthGet, pushRoleMetadataForUser } from '#link/util/calls.js';
 import { Account } from '@prisma/client';
 
 // Initialize Express
@@ -78,7 +81,7 @@ app.get('/link', cookieParser(), async (req, res) => {
 		});
 
 		if (osuAccount == null) { // If the user has no linked osu! account, send them to sign in with osu!
-			if (!req.cookies['authjs.csrf-token']) {
+			if (!req.cookies['authjs.csrf-token']) { // Can we somehow check if the csrf token is actually valid...?
 				return res.render('link/set-csrf', commonProps);
 			} else {
 				return res.render('link/signin', {
@@ -102,27 +105,37 @@ app.get('/link', cookieParser(), async (req, res) => {
 				});
 			}
 		} else {
-			// If the user has both an osu! and Discord account, send their role data to Discord
-			await pushRoleMetadataForUser(
-				(discordAccount as Account).providerAccountId,
-				(discordAccount as Account).access_token,
-				{
-					creationDate: user.osuCreationDate,
-					globalRank: user.osuGlobalRank,
-					countryRank: user.osuCountryRank,
-					totalPP: user.osuTotalPP,
-					playCount: user.osuPlayCount
-				},
-				user.osuUsername,
-				user.osuFavoriteRuleset,
-				JSON.parse(user.osuPlaystyles) as PlayStyle[],
-				user.osuCountry
-			).then(() => {
-				return res.render('link/done', commonProps);
-			}).catch((err) => {
-				console.error('Error pushing role metadata to Discord:', err);
-				return res.render('link/error', { error: 'An error occurred getting your osu! account information. Please try again later.', ...commonProps });
-			});
+			// If the user has both an osu! and Discord account, send their role data to Discord\
+
+			// /users/@me/connections
+			// /users/@me/guilds
+			// TODO! Get guilds and reddit
+
+			
+
+			try {
+				const osuInfo = await getOsuInfo(osuAccount.access_token, osuAccount.refresh_token);
+
+				await prisma.user.update({
+					where: {
+						id: user.id
+					}, 
+					data: {
+						osuInfo: JSON.stringify(osuInfo)
+					}
+				})
+				
+				await pushRoleMetadataForUser(
+					(discordAccount as Account).providerAccountId,
+					(discordAccount as Account).access_token,
+					osuInfo
+				).then(() => {
+					return res.render('link/done', commonProps);
+				});
+			} catch (err) {
+				console.error('Error pushing role metadata to Discord: ', err);
+				return res.render('link/error', { error: 'An error occurred sending data to Discord: ' + err.message, ...commonProps });
+			}
 		}
 	}
 });

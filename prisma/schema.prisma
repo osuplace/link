@@ -48,17 +48,8 @@ model User {
   isInOsuPlace   Boolean?
   redditUsername String?
 
-  // TODO: move osu info to a separate model?
-  osuUsername     String?
-  osuCreationDate DateTime?
-  osuGlobalRank   Int?
-  osuCountryRank  Int?
-  osuTotalPP      Float?
-  osuPlayCount    Int?
-
-  osuFavoriteRuleset String?
-  osuPlaystyles      String? // JSON array
-  osuCountry         String?
+  osuInfo     String? // JSON of OsuInfo
+  discordInfo String? // Json of DiscordInfo
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
