@@ -48,6 +48,8 @@ model User {
   isInOsuPlace   Boolean?
   redditUsername String?
 
+  // TODO: move osu info to a separate model?
+  osuUsername     String?
   osuCreationDate DateTime?
   osuGlobalRank   Int?
   osuCountryRank  Int?
