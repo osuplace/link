@@ -2,17 +2,17 @@ import '@auth/express';
 
 declare module '@auth/express' {
 	interface User {
-		isInOsuPlace: boolean | null;
-		redditUsername: string | null;
+		isInOsuPlace?: boolean;
+		redditUsername?: string;
 
-		osuCreationDate: Date | null;
-		osuGlobalRank: number | null;
-		osuCountryRank: number | null;
-		osuTotalPP: number | null;
-		osuPlayCount: number | null;
+		osuCreationDate?: Date;
+		osuGlobalRank?: number;
+		osuCountryRank?: number;
+		osuTotalPP?: number;
+		osuPlayCount?: number;
 
-		osuFavoriteRuleset: string | null;
-		osuPlaystyles: string | null;
-		osuCountry: string | null;
+		osuFavoriteRuleset?: string;
+		osuPlaystyles?: string;
+		osuCountry?: string;
 	}
 }

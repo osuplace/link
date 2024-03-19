@@ -53,17 +53,20 @@ export async function pushRoleMetadataForUser(
 ) {
 	// TODO: Add token refreshing https://github.com/discord/linked-roles-sample/blob/f491c22307b4da3d7df8371eeffbd63b1905f1bf/src/discord.js#L67
 
+	if (favoriteRuleset == 'osu') favoriteRuleset = '';
+	if (favoriteRuleset == 'fruits') favoriteRuleset = 'catch';
+
 	const response = await fetch(`https://discord.com/api/v10/users/@me/applications/${process.env.LINK_DISCORD_CLIENT_ID}/role-connection`, {
 		method: 'PUT',
 		body: JSON.stringify({
-			platform_name: `osu!${favoriteRuleset} ${getFlagEmoji(country)} ${getPlaystyleEmojis(playStyles)}`,
-			platform_username: username,
+			platform_name: `osu!${favoriteRuleset}`,
+			platform_username: `@${username} (${getFlagEmoji(country)} ${getPlaystyleEmojis(playStyles)})`,
 			metadata: {
-				creationDate: creationDate.toDateString(),
-				globalRank: globalRank,
-				countryRank: countryRank,
-				totalPP: Math.floor(totalPP),
-				playCount: playCount
+				creationdate: creationDate.toDateString(),
+				globalrank: globalRank,
+				countryrank: countryRank,
+				totalpp: Math.floor(totalPP),
+				playcount: playCount
 			}
 		} as RESTPutAPICurrentUserApplicationRoleConnectionJSONBody),
 		headers: {
@@ -71,4 +74,6 @@ export async function pushRoleMetadataForUser(
 			Authorization: `Bearer ${userAccessToken}`
 		}
 	});
+	console.log('username sent: ', username)
+	console.log(await JSON.stringify(await response.json(), null, 2));
 }

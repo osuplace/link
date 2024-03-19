@@ -13,7 +13,9 @@ import cookieParser from 'cookie-parser';
 // Our imports
 import { auth, authConfig, getSession } from '#link/instance/auth.js';
 import { prisma } from '#link/instance/database.js';
-import commonProps from './util/common-props.js';
+import commonProps from '#link/util/common-props.js';
+import { PlayStyle, pushRoleMetadataForUser } from '#link/util/calls.js';
+import { Account } from '@prisma/client';
 
 // Initialize Express
 let app = express();
@@ -38,7 +40,8 @@ app.get('/link', cookieParser(), async (req, res) => {
 
 	// If the user isn't signed in, send them to sign in with osu!
 	const session = await getSession(req);
-	if (!session || !session.user) {
+	if (!session || !session.user || !session.user.id) {
+		console.log(session);
 		// If the user doesn't have a CSRF token, send them to get one
 		// FIXME: This is a dumb workaround because right now there's no way for me to get a CSRF token serverside, because @auth/express doesn't expose a function for it.
 		if (!req.cookies['authjs.csrf-token']) {
@@ -54,7 +57,73 @@ app.get('/link', cookieParser(), async (req, res) => {
 			});
 		}
 	} else {
-		return res.render('link/done', commonProps)
+		// If the user is signed in, get them from the database
+		const user = await prisma.user.findUnique({
+			where: { id: session.user.id }
+		});
+		if (user == null) { return res.render('link/error', { error: 'An error occurred accessing the database. Please try again later.', ...commonProps }); }; // TODO: Sign the user out so they have to sign in again to maybe fix it?
+
+		const osuAccount = await prisma.account.findFirst({
+			where: {
+				provider: 'osu',
+				userId: user.id
+			}
+		});
+		
+		const discordAccount = await prisma.account.findFirst({
+			where: {
+				provider: 'discord',
+				userId: user.id
+			}
+		});
+
+		if (osuAccount == null) { // If the user has no linked osu! account, send them to sign in with osu!
+			if (!req.cookies['authjs.csrf-token']) {
+				return res.render('link/set-csrf', commonProps);
+			} else {
+				return res.render('link/signin', {
+					providerFriendlyName: 'osu!',
+					providerId: 'osu',
+					providerLogo: process.env.LINK_BASEURL + '/assets/images/osu-singlecolor.png',
+					csrfToken: req.cookies['authjs.csrf-token'].split('|')[0],
+					...commonProps
+				});
+			}
+		} else if (discordAccount == null) { // If the user has no linked Discord account, send them to sign in with Discord
+			if (!req.cookies['authjs.csrf-token']) {
+				return res.render('link/set-csrf', commonProps);
+			} else {
+				return res.render('link/signin', {
+					providerFriendlyName: 'Discord',
+					providerId: 'discord',
+					providerLogo: process.env.LINK_BASEURL + '/assets/images/discord-with-margin.svg',
+					csrfToken: req.cookies['authjs.csrf-token'].split('|')[0],
+					...commonProps
+				});
+			}
+		} else {
+			// If the user has both an osu! and Discord account, send their role data to Discord
+			await pushRoleMetadataForUser(
+				(discordAccount as Account).providerAccountId,
+				(discordAccount as Account).access_token,
+				{
+					creationDate: user.osuCreationDate,
+					globalRank: user.osuGlobalRank,
+					countryRank: user.osuCountryRank,
+					totalPP: user.osuTotalPP,
+					playCount: user.osuPlayCount
+				},
+				user.osuUsername,
+				user.osuFavoriteRuleset,
+				JSON.parse(user.osuPlaystyles) as PlayStyle[],
+				user.osuCountry
+			).then(() => {
+				return res.render('link/done', commonProps);
+			}).catch((err) => {
+				console.error('Error pushing role metadata to Discord:', err);
+				return res.render('link/error', { error: 'An error occurred getting your osu! account information. Please try again later.', ...commonProps });
+			});
+		}
 	}
 });
 

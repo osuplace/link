@@ -14,6 +14,7 @@
 		- Favorite ruleset total PP
 		- Favorite ruleset play count
 - [ ] Make auth pages
+	- [ ] If /link gets a ?error=, show that ?error= (i.e. ?error=OAuthCallbackError), these are listed I think here? https://authjs.dev/reference/core/errors/#oauthcallbackerror
 	- [ ] Error
 	- [ ] Sign out
 	- [ ] The other ones?
