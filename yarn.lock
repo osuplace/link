@@ -5,9 +5,9 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@auth/core@file:../core::locator=%40auth%2Fexpress%40file%3A.%2Fauth.js%2Fpackages%2Fframeworks-express%23.%2Fauth.js%2Fpackages%2Fframeworks-express%3A%3Ahash%3D14df9e%26locator%3Dlink%2540workspace%253A.":
+"@auth/core@file:../core::locator=%40auth%2Fexpress%40file%3A.%2Fauth.js%2Fpackages%2Fframeworks-express%23.%2Fauth.js%2Fpackages%2Fframeworks-express%3A%3Ahash%3Da8e95e%26locator%3Dlink%2540workspace%253A.":
   version: 0.28.0
-  resolution: "@auth/core@file:../core#../core::hash=e9a44a&locator=%40auth%2Fexpress%40file%3A.%2Fauth.js%2Fpackages%2Fframeworks-express%23.%2Fauth.js%2Fpackages%2Fframeworks-express%3A%3Ahash%3D14df9e%26locator%3Dlink%2540workspace%253A."
+  resolution: "@auth/core@file:../core#../core::hash=e9a44a&locator=%40auth%2Fexpress%40file%3A.%2Fauth.js%2Fpackages%2Fframeworks-express%23.%2Fauth.js%2Fpackages%2Fframeworks-express%3A%3Ahash%3Da8e95e%26locator%3Dlink%2540workspace%253A."
   dependencies:
     "@panva/hkdf": "npm:^1.1.1"
     "@types/cookie": "npm:0.6.0"
@@ -85,12 +85,12 @@ __metadata:
 
 "@auth/express@file:./auth.js/packages/frameworks-express::locator=link%40workspace%3A.":
   version: 0.5.0
-  resolution: "@auth/express@file:./auth.js/packages/frameworks-express#./auth.js/packages/frameworks-express::hash=14df9e&locator=link%40workspace%3A."
+  resolution: "@auth/express@file:./auth.js/packages/frameworks-express#./auth.js/packages/frameworks-express::hash=a8e95e&locator=link%40workspace%3A."
   dependencies:
     "@auth/core": "file:../core"
   peerDependencies:
     express: ^4.18.2
-  checksum: 10c0/0323e9b668481936268daaab8665d64f9e4a79b12be2dad727551bfde7d7c72e98d10d608a1458c2bf4df4c2a6d3f6adc2440756f4d610376265bd2a4d80fba1
+  checksum: 10c0/3ff18ef3287ef9a76dd6585417d84490df0dd553537996dcad75d92537678e67193865499df82b8511ee410952e8f9c9ebc3f8a7e2c4b249405ca52a064ecc24
   languageName: node
   linkType: hard
 
@@ -955,10 +955,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oauth4webapi@npm:^2.4.0":
+"oauth4webapi@npm:2.10.3":
   version: 2.10.3
   resolution: "oauth4webapi@npm:2.10.3"
   checksum: 10c0/a0b3bf177c2a1d98d1907cd6f5804be827e433dfff9951f1e2f3dabbcc178975ca2e55f6a0e0dc0b4b8fd2a881b1dd4d0aa86646f11db0e00f7c85af0c288c02
+  languageName: node
+  linkType: hard
+
+"oauth4webapi@patch:oauth4webapi@npm%3A2.10.3#~/.yarn/patches/oauth4webapi-npm-2.10.3-a155527f48.patch":
+  version: 2.10.3
+  resolution: "oauth4webapi@patch:oauth4webapi@npm%3A2.10.3#~/.yarn/patches/oauth4webapi-npm-2.10.3-a155527f48.patch::version=2.10.3&hash=bc7e47"
+  checksum: 10c0/c12dada12006463a781723a62b3717db5b8b6619448d9366ec99e4fa6eddcaa959e3199a546e38ee6acf1d279b2c07e610a56e8dac193b9b75eb1445bbb46bf5
   languageName: node
   linkType: hard
 

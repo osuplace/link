@@ -39,5 +39,8 @@
   },
   "imports": {
     "#link/*": "./dist/*"
+  },
+  "resolutions": {
+    "oauth4webapi@npm:^2.4.0": "patch:oauth4webapi@npm%3A2.10.3#~/.yarn/patches/oauth4webapi-npm-2.10.3-a155527f48.patch"
   }
 }

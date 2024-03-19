@@ -1,0 +1,13 @@
+diff --git a/build/index.js b/build/index.js
+index 18d7e70da78321059063db104f3d8391fd8f8818..fe71123f343d09e8580750c067edf5a2afb97588 100644
+--- a/build/index.js
++++ b/build/index.js
+@@ -1027,7 +1027,7 @@ export async function authorizationCodeGrantRequest(as, client, callbackParamete
+     }
+     const parameters = new URLSearchParams(options?.additionalParameters);
+     parameters.set('redirect_uri', redirectUri);
+-    parameters.set('code_verifier', codeVerifier);
++    if (codeVerifier != 'auth') parameters.set('code_verifier', codeVerifier);
+     parameters.set('code', code);
+     return tokenEndpointRequest(as, client, 'authorization_code', parameters, options);
+ }
