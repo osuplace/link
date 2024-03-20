@@ -24,7 +24,7 @@
 		<form action="<%= BASE_URL %>/auth/signin/<%= providerId %>" method="POST">
 			<input type="hidden" name="csrfToken" value="<%= csrfToken %>" />
 			<input type="hidden" name="callbackUrl" value="<%= BASE_URL %>/link" />
-			<button type="submit">
+			<button type="submit" style="font-size: 1.5em;" class="horizontal-center-flex">
 				<img src="<%= providerLogo %>" alt="" style="height: 2em; margin-right: 0.5em; filter: brightness(0) invert(1);" />
 				<span>Sign in with <%= providerFriendlyName %></span>
 			</button>

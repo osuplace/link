@@ -4,7 +4,39 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><%= BRAND_NAME %></title>
+
+	<link rel="stylesheet" href="<%= BASE_URL %>/assets/styles/containered-page.css">
 </head>
 <body>
-	Coming soon!	
+	<div id="container">
+		<h1 class="horizontal-center-flex">
+			<img src="<%= BASE_URL %>/favicon.png" alt="" style="height: 2em; margin-right: 0.5em;" />
+			<span><%= BRAND_NAME %></span>
+		</h1>
+		<p>
+			<b>Easily connect osu! accounts to your Discord server!</b> <%= BRAND_NAME %> is a Discord third-party app that provides a Linked Role connection to allow you to link your osu! account to Discord, use it as a requirement for a Linked Role, and show it on your Server Profile.
+		</p>
+		<a class="link-with-button" href="<%= installLink %>" target="_blank">
+			<button style="font-size: 1.5em;">
+				Add to your server
+			</button>
+		</a>
+		<p>
+			After adding <%= BRAND_NAME %>, you can just <a href="https://support.discord.com/hc/en-us/articles/10388356626711-Connections-Linked-Roles-Admins" target="_blank">create a new Linked Role</a> using it as one of the requirements. Statistics will show on Server Profiles only after a user claims a linked role.
+		</p>
+		<p>
+			<a href="<%= BASE_URL %>/privacy" target="_blank">Privacy policy</a> · <a href="https://github.com/osuplace/link" target="_blank">Source code</a> · <a href="mailto:contact@osu.place" target="_blank">Contact</a>
+		</p> 
+			<details>
+				<summary>
+					Copyright (c) 2024 April &lt;april@dummy.cafe&gt;
+				</summary>
+				<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+
+				<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>
+
+				<p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see https://www.gnu.org/licenses/.</p>
+			</details>
+	</div>
 </body>
+</html>

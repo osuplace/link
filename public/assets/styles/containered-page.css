@@ -1,5 +1,14 @@
 :root {
 	height: 100%;
+	--bg-1: #18171c;
+	--bg-2: #24222a;
+	--bg-3: #2a2734;
+	--accent: #ff66aa;
+	--radius: 0.5rem;
+	--border-width: 3px;
+	--border-color: rgba(150, 150, 150, 0.1);
+	--border-color-on-accent: rgba(0, 0, 0, 0.3);
+	--padding: 0.8em;
 }
 
 body {
@@ -13,18 +22,22 @@ body {
 	margin: 0;
 	padding: 0;
 
-	background-color: #18171c;
+	background-color: var(--bg-1);
 	color: white;
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 #container {
 	max-width: 600px;
-	padding: 2em;
+	padding: calc(var(--padding) * 2);
 	margin: 0.5em;
 
-	border-radius: 0.5rem;
-	background-color: #24222a;
+	border-radius: var(--radius);
+	background-color: var(--bg-2);
+
+	border-width: var(--border-width);
+	border-color: var(--border-color);
+	border-style: solid;
 }
 
 #container > *:first-child {
@@ -37,24 +50,44 @@ body {
 
 #container a,
 #container a:visited {
-	color: #ff66aa;
+	color: var(--accent);
 }
 
 #container button {
 	width: 100%;
-	font-size: 1.5em;
-	padding-top: 1em;
-	padding-bottom: 1em;
+	padding: var(--padding);
 
+	background-color: var(--accent);
+	border-style: solid;
+	border-width: var(--border-width);
+	border-color: var(--border-color-on-accent);
+	border-radius: var(--radius);
+	color: white;
+
+	cursor: pointer;
+}
+
+.horizontal-center-flex {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+}
 
-	background-color: #ff66aa;
-	border-style: none;
-	border-radius: 0.5rem;
-	color: white;
+a.link-with-button {
+	text-decoration: none;
+}
 
+details {
+	padding: var(--padding);
+	border-radius: var(--radius);
+	background-color: var(--bg-3);
+	border-style: solid;
+	border-width: var(--border-width);
+	border-color: var(--border-color);
+	border-radius: var(--radius);
+}
+
+details summary {
 	cursor: pointer;
 }

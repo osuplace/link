@@ -1,8 +1,12 @@
-# Link
+# osu.place Link
 
-Link is a Discord Connection service to allow you to connect your osu! account to Discord.
+> Easily connect osu! accounts to your Discord server!
 
-## Installation
+osu.place Link is a Discord third-party app that provides a Linked Role connection to allow you to link your osu! account to Discord, use it as a requirement for a Linked Role, and show it on your Server Profile.
+
+If you're looking to use this in your own Discord server, you **don't need to host it yourself**! Just visit [link.osu.place](https://link.osu.place/) and add it to your server, then [add a linked role](https://support.discord.com/hc/en-us/articles/10388356626711-Connections-Linked-Roles-Admins).
+
+## Installation + Development
 
 0. `git clone --recurse-submodules https://github.com/osuplace/link && cd link`
 1. `yarn install` (install dependencies)
@@ -22,10 +26,6 @@ Link is a Discord Connection service to allow you to connect your osu! account t
 	1. You might see some errors within `@auth`, but those don't actually affect anything for us, so just ignore them.
 6. `yarn register` (registers role metadata with Discord)
 7. `yarn start`
-
-## Development 
-
-Note: The `@auth/core` requirement should be the same version across Link, `@auth/express`, and `@auth/prisma-adapter`!
 
 # License & Copyright
 

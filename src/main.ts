@@ -34,7 +34,12 @@ app.use(rateLimit({
 app.use('/auth/*', auth); // Get the session with: await getSession(req);
 
 // Pages
-app.get('/', (req, res) => res.render('index', commonProps));
+let installLink = new URL('https://discord.com/oauth2/authorize');
+installLink.searchParams.set('client_id', process.env.LINK_DISCORD_CLIENT_ID);
+installLink.searchParams.set('scope', 'applications.commands bot');
+installLink.searchParams.set('permissions', '0');
+
+app.get('/', (req, res) => res.render('index', { installLink, ...commonProps }));
 app.get('/privacy', (req, res) => res.render('privacy', commonProps));
 
 // Routes
