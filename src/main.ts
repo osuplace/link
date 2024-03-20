@@ -84,14 +84,16 @@ app.get(['/link', '/auth/link'], cookieParser(), async (req, res) => {
 	// If we got a 'error' query, show an error
 	if (req.query.error) {
 		return res.render('link/error', { error: getErrorString(req.query.error as string), ...commonProps });
-	}	
+	}
+	
+	let csrfCookie = req.cookies['__Host-authjs.csrf-token'] ?? req.cookies['authjs.csrf-token'];
 
 	// If the user isn't signed in, send them to sign in with osu!
 	const session = await getSession(req);
 	if (!session || !session.user || !session.user.id) {
 		// If the user doesn't have a CSRF token, send them to get one
 		// FIXME: This is a dumb workaround because right now there's no way for me to get a CSRF token serverside, because @auth/express doesn't expose a function for it.
-		if (!req.cookies['authjs.csrf-token']) {
+		if (!csrfCookie) {
 			return res.render('link/set-csrf', commonProps);
 		} else {
 			// If they do, send them to sign in
@@ -99,7 +101,7 @@ app.get(['/link', '/auth/link'], cookieParser(), async (req, res) => {
 				providerFriendlyName: 'osu!',
 				providerId: 'osu',
 				providerLogo: process.env.LINK_BASEURL + '/assets/images/osu-singlecolor.png',
-				csrfToken: req.cookies['authjs.csrf-token'].split('|')[0],
+				csrfToken: csrfCookie.split('|')[0],
 				...commonProps
 			});
 		}
@@ -124,26 +126,26 @@ app.get(['/link', '/auth/link'], cookieParser(), async (req, res) => {
 		});
 
 		if (osuAccount == null) { // If the user has no linked osu! account, send them to sign in with osu!
-			if (!req.cookies['authjs.csrf-token']) { // Can we somehow check if the csrf token is actually valid...?
+			if (!csrfCookie) { // Can we somehow check if the csrf token is actually valid...?
 				return res.render('link/set-csrf', commonProps);
 			} else {
 				return res.render('link/signin', {
 					providerFriendlyName: 'osu!',
 					providerId: 'osu',
 					providerLogo: process.env.LINK_BASEURL + '/assets/images/osu-singlecolor.png',
-					csrfToken: req.cookies['authjs.csrf-token'].split('|')[0],
+					csrfToken: csrfCookie.split('|')[0],
 					...commonProps
 				});
 			}
 		} else if (discordAccount == null) { // If the user has no linked Discord account, send them to sign in with Discord
-			if (!req.cookies['authjs.csrf-token']) {
+			if (!csrfCookie) {
 				return res.render('link/set-csrf', commonProps);
 			} else {
 				return res.render('link/signin', {
 					providerFriendlyName: 'Discord',
 					providerId: 'discord',
 					providerLogo: process.env.LINK_BASEURL + '/assets/images/discord-with-margin.svg',
-					csrfToken: req.cookies['authjs.csrf-token'].split('|')[0],
+					csrfToken: csrfCookie.split('|')[0],
 					...commonProps
 				});
 			}
