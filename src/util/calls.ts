@@ -5,7 +5,7 @@ import { DiscordProfile } from "@auth/express/providers/discord";
 import { OsuProfile } from "@auth/express/providers/osu";
 import { Account } from "@prisma/client";
 import { Snowflake } from "discord-api-types/globals";
-import { RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from "discord-api-types/v10";
+import { APIConnection, ConnectionService, RESTAPIPartialCurrentUserGuild, RESTGetAPICurrentUserConnectionsResult, RESTGetAPICurrentUserGuildsResult, RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from "discord-api-types/v10";
 import * as oAuth from 'oauth4webapi';
 
 export class AccountUnlinkedError extends Error {
@@ -87,8 +87,28 @@ export interface DiscordInfo {
 
 export const discordProvider = (authConfig.providers.find((p: OAuthConfig<any>) => p.id == 'discord')) as OAuthConfig<DiscordProfile>;
 
-export async function getDiscordInfo(accessToken: string, refreshToken: string) {
-	throw Error('not implemented >.<');
+export async function getDiscordInfo(accessToken: string) {
+	const guilds: RESTGetAPICurrentUserGuildsResult = await oAuthGet(discordProvider, accessToken, process.env.LINK_DISCORD_CLIENT_ID, process.env.LINK_DISCORD_CLIENT_SECRET, 'https://discord.com/api/v10/users/@me/guilds');
+
+	if (guilds.find((guild: RESTAPIPartialCurrentUserGuild) => guild.id == process.env.LINK_DISCORD_RPLACE_SERVER_ID) != undefined) {
+		// User is in osu! Logo Builders server
+		const connections: RESTGetAPICurrentUserConnectionsResult = await oAuthGet(discordProvider, accessToken, process.env.LINK_DISCORD_CLIENT_ID, process.env.LINK_DISCORD_CLIENT_SECRET, 'https://discord.com/api/v10/users/@me/connections');
+		const reddit = connections.find((connection: APIConnection) => connection.type == ConnectionService.Reddit);
+		if (reddit != undefined) {
+			return {
+				isInOsuPlace: true,
+				redditUsername: reddit.name
+			} as DiscordInfo;
+		} else {
+			return {
+				isInOsuPlace: true
+			} as DiscordInfo;
+		}
+	} else {
+		return {
+			isInOsuPlace: false
+		} as DiscordInfo;
+	}
 }
 
 export interface OsuInfo {
@@ -209,7 +229,7 @@ export async function pushRoleMetadataForUser(
 		method: 'PUT',
 		body: JSON.stringify({
 			platform_name: `osu!${info.favoriteRuleset}`,
-			platform_username: `@${info.username} (${getFlagEmoji(info.country)} ${getPlaystyleEmojis(info.playStyles)})`,
+			platform_username: `@${info.username} — ${getFlagEmoji(info.country)} ${getPlaystyleEmojis(info.playStyles)}`,
 			metadata: {
 				creationdate: dateString,
 				globalrank: info.globalRank,

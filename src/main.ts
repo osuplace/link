@@ -9,6 +9,7 @@ checkEnv();
 // Server imports
 import { default as express, Express, Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
+import { rateLimit } from 'express-rate-limit';
 
 // Our imports
 import { auth, authConfig, getSession } from '#link/instance/auth.js';
@@ -17,7 +18,7 @@ import { OsuProfile } from '@auth/express/providers/osu';
 import { DiscordProfile } from '@auth/express/providers/discord';
 import { prisma } from '#link/instance/database.js';
 import commonProps from '#link/util/common-props.js';
-import { PlayStyle, discordProvider, getOsuInfo, oAuthGet, osuProvider, pushRoleMetadataForUser, refreshAccessToken } from '#link/util/calls.js';
+import { PlayStyle, discordProvider, getDiscordInfo, getOsuInfo, oAuthGet, osuProvider, pushRoleMetadataForUser, refreshAccessToken } from '#link/util/calls.js';
 import { Account } from '@prisma/client';
 
 // Initialize Express
@@ -25,21 +26,60 @@ let app = express();
 app.set('trust proxy', 'loopback');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(rateLimit({
+	windowMs: 1 * 60 * 1000, // 1 minute
+	limit: 25,
+	// TODO: Could put Redis here I guess..?
+}));
 app.use('/auth/*', auth); // Get the session with: await getSession(req);
-
 
 // Pages
 app.get('/', (req, res) => res.render('index', commonProps));
 app.get('/privacy', (req, res) => res.render('privacy', commonProps));
 
 // Routes
-app.get('/link', cookieParser(), async (req, res) => {
-	// TODO
-	// Cases (check from top to bottom!): 
-	// - Not logged in -> Send to osu! login
-	// - Logged in with osu! but not Discord (do osu! first so that we have the latest player data in case this is a refresh) -> Send to Discord login
-	// - Logged in with both Discord (with valid token, get it from the database) and osu! -> send data to Discord and stuff, see https://discord.com/channels/297657542572507137/959453204163199056/1218260546168557650 (and then show "You can close this tab!")
-	// POST /auth/signin
+function getErrorString(errorCode: string) {
+	// List of error codes: https://authjs.dev/guides/basics/pages#error-codes
+
+	switch(errorCode) {
+		case 'AccessDenied':
+			return `Sorry, you\'re not allowed to do this. (${errorCode} error)`;
+		
+		case 'OAuthSignin':
+		case 'OAuthCallback':
+		case 'Callback':
+			return `An error occurred trying to sign in. Please try again later and get in touch if this keeps happening. (${errorCode} error)`;
+		
+		case 'OAuthCreateAccount':
+		case 'EmailCreateAccount':
+			return `An error occurred accessing the database. Please try again later and get in touch if this keeps happening. (${errorCode} error)`;
+		
+		case 'OAuthAccountNotLinked':
+		case 'EmailSignin':
+		case 'CredentialsSignin':
+		case 'Verification':
+			return `A really weird error occurred. This shouldn't ever happen, so please contact us if this keeps happening. (${errorCode} error)`;
+		
+		case '':
+			return 'An unknown error occurred. Please try again later and get in touch if this keeps happening.';
+		
+		case 'SessionRequired':
+		case 'Configuration':
+		case 'Default':
+		default:
+			return `An unknown error occurred. Please try again later and get in touch if this keeps happening. (${errorCode} error)`;
+	}
+}
+
+app.get('/error', (req, res) => {
+	return res.render('link/error', { error: getErrorString(req.query.error as string ?? ''), ...commonProps });
+});
+
+app.get(['/link', '/auth/link'], cookieParser(), async (req, res) => {
+	// If we got a 'error' query, show an error
+	if (req.query.error) {
+		return res.render('link/error', { error: getErrorString(req.query.error as string), ...commonProps });
+	}	
 
 	// If the user isn't signed in, send them to sign in with osu!
 	const session = await getSession(req);
@@ -63,7 +103,7 @@ app.get('/link', cookieParser(), async (req, res) => {
 		const user = await prisma.user.findUnique({
 			where: { id: session.user.id }
 		});
-		if (user == null) { return res.render('link/error', { error: 'An error occurred accessing the database. Please try again later and get in touch if this keeps happening. (user == null)', ...commonProps }); }; // TODO: Sign the user out so they have to sign in again to maybe fix it?
+		if (user == null) { return res.render('link/error', { error: 'An error occurred accessing the database. Please try again later and get in touch if this keeps happening. (user == null)', ...commonProps }); }; // This should never happen because if the User gets deleted, the session would too... 
 
 		let osuAccount: Account = await prisma.account.findFirst({
 			where: {
@@ -126,18 +166,19 @@ app.get('/link', cookieParser(), async (req, res) => {
 				}
 			}
 
-			// /users/@me/connections
-			// /users/@me/guilds
-			// TODO! Get guilds and reddit
-
+			// Okay, time for the real deal!
 			try {
-				const osuInfo = await getOsuInfo(osuAccount.access_token);
+				const [ discordInfo, osuInfo ] = await Promise.all([
+					getDiscordInfo(discordAccount.access_token), 
+					getOsuInfo(osuAccount.access_token)
+				]);
 
 				await prisma.user.update({
 					where: {
 						id: user.id
 					}, 
 					data: {
+						discordInfo: JSON.stringify(discordInfo),
 						osuInfo: JSON.stringify(osuInfo)
 					}
 				})
@@ -172,9 +213,12 @@ app.get('/link', cookieParser(), async (req, res) => {
 							console.error('Error refreshing tokens: ', err);
 						}
 					}
-
-					// Just send them to set-csrf to make their browser refresh to try again XD
-					return res.render('link/set-csrf', commonProps);
+					
+					if (req.query.is_retry_after_refresh == '1') {
+						return res.render('link/error', { error: 'Sorry, it seems like either osu! or Discord is down right now. Please try again later, or get in touch if this keeps happening.', ...commonProps });
+					} else {
+						return res.redirect('/link?is_retry_after_refresh=1');
+					}
 				} else {
 					console.error('Error pushing role metadata to Discord: ', err);
 					return res.render('link/error', { error: 'An error occurred sending data to Discord: ' + err.message, ...commonProps });

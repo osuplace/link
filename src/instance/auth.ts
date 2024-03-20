@@ -28,7 +28,11 @@ let authConfig: Omit<AuthConfig, "raw"> = {
 		strategy: 'database'
 	},
 	pages: {
-		signIn: '/link'
+		signIn: '/link',
+		error: '/error'
+	},
+	theme: {
+		logo: process.env.LINK_BASEURL + '/favicon.png'
 	},
 	callbacks: {
 		async session({ session, user }) {

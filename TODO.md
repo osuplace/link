@@ -13,20 +13,20 @@
 		- Favorite ruleset country rank
 		- Favorite ruleset total PP
 		- Favorite ruleset play count
-- [ ] DiscordInfo
+- [x] DiscordInfo
 	- Is in osu place?
 	- Reddit username
-- [ ] Make auth pages
-	- [ ] If /link gets a ?error=, show that ?error= (i.e. ?error=OAuthCallbackError), these are listed I think here? https://authjs.dev/reference/core/errors/#oauthcallbackerror
-	- [ ] Error
+- [x] Make auth pages
+	- [x] If /link gets a ?error=, show that ?error= (i.e. ?error=OAuthCallbackError), these are listed I think here? https://authjs.dev/reference/core/errors/#oauthcallbackerror
+	- [x] Error
 	- [ ] Sign out
 	- [ ] The other ones?
 - [ ] A way to refresh your details
 	- Slash command interactions?
 - [ ] Slash commands (user installable)?
 - [ ] Automatic refreshing of access tokens (with refresh token)
-	- [ ] If the access got revoked on either side, unlink and delete info about that user!
+	- [x] If the access got revoked on either side, unlink and delete info about that user!
 	- [ ] Automatically update the connection metadata with new info
-- [ ] Ratelimits
+- [x] Ratelimits
 - [ ] Maybe osu.place landing can have a teeny tiny banner at the bottom for "Link by osu.place: Easily connect osu! accounts to your Discord server" and then maybe another one for hytc hehehehehhehehh
 - [ ] remove skipLibCheck

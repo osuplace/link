@@ -631,6 +631,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"express-rate-limit@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "express-rate-limit@npm:7.2.0"
+  peerDependencies:
+    express: 4 || 5 || ^5.0.0-beta.1
+  checksum: 10c0/5b3d047d14b6de40fea355be8313ea205b4c7ddaa167c3683779038b8a203a62d4d0a995b1f0bb6fc540abfd5923ac9af905d2cf748fc28af1cb24aefd6c718c
+  languageName: node
+  linkType: hard
+
 "express@npm:^4.18.3":
   version: 4.18.3
   resolution: "express@npm:4.18.3"
@@ -858,6 +867,7 @@ __metadata:
     dotenv-cli: "npm:^7.4.1"
     ejs: "npm:^3.1.9"
     express: "npm:^4.18.3"
+    express-rate-limit: "npm:^7.2.0"
     oauth4webapi: "npm:^2.4.0"
     prisma: "npm:^5.11.0"
     typescript: "npm:^5.4.2"
