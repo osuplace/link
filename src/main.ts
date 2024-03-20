@@ -233,6 +233,6 @@ app.get(['/link', '/auth/link'], cookieParser(), async (req, res) => {
 	}
 });
 
-app.listen(process.env.PORT || 3000, () => {
-	console.log('Ready, listening on port ' + (process.env.PORT || 3000));
+app.listen(process.env.LINK_PORT || 3000, () => {
+	console.log('Ready, listening on port ' + (process.env.LINK_PORT || 3000));
 });
