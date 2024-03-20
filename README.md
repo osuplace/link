@@ -9,12 +9,12 @@ If you're looking to use this in your own Discord server, you **don't need to ho
 ## Installation + Development
 
 0. `git clone --recurse-submodules https://github.com/osuplace/link && cd link`
-1. `yarn install` (install dependencies)
-2. Build Auth.js:
+1. Build Auth.js:
 	1. `cd auth.js`
 	2. `pnpm install && pnpm build`
 	3. This is gonna take like 5 minutes so go get a snack in the meantime :3
 	4. Change all the dependencies that use `workspace:` in `packages/frameworks-express` and `packages/adapter-prisma` to use `file:` relative paths instead (i.e. `file:../core`).
+2. `yarn install` (install dependencies)
 3. Copy `.env.example` to `.env` and edit `.env` to configure the app
 4. Set up the database:
 	- In **development**, use `yarn db:dev` to generate the Prisma client and deploy the schema to your local database.
