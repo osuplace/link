@@ -13,31 +13,31 @@ const metadata: RoleMetadata[] = [
 	{
 		key: 'creationdate',
 		name: 'Account creation date',
-		description: 'days since account created',
-		type: MetadataType.DatetimeLessThanOrEqual
+		description: 'Minimum days since account creation',
+		type: MetadataType.DatetimeGreaterThanOrEqual
 	},
 	{
 		key: 'globalrank',
 		name: 'Global rank',
-		description: 'or better (lower) rank',
+		description: 'Max global rank',
 		type: MetadataType.IntegerLessThanOrEqual
 	},
 	{
 		key: 'countryrank',
 		name: 'Country rank',
-		description: 'or better (lower) rank',
+		description: 'Max country rank',
 		type: MetadataType.IntegerLessThanOrEqual
 	},
 	{
 		key: 'totalpp',
 		name: 'Total PP',
-		description: 'or more PP',
+		description: 'Minimum PP',
 		type: MetadataType.IntegerGreaterThanOrEqual
 	},
 	{
 		key: 'playcount',
 		name: 'Play count',
-		description: 'or more plays',
+		description: 'Minimum play count',
 		type: MetadataType.IntegerGreaterThanOrEqual
 	}
 ]

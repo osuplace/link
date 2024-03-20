@@ -24,7 +24,7 @@
 					location.reload();
 				} else {
 					const err = await response.text();
-					showError(`An error occured while preparing sign-in. Please try again later. (${response.status} ${response.statusText}: ${err})`);
+					showError(`An error occured while preparing sign-in. Please try again later and get in touch if this keeps happening. (${response.status} ${response.statusText}: ${err})`);
 				}
 			})
 			.catch(err => {

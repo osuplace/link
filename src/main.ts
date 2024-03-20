@@ -17,7 +17,7 @@ import { OsuProfile } from '@auth/express/providers/osu';
 import { DiscordProfile } from '@auth/express/providers/discord';
 import { prisma } from '#link/instance/database.js';
 import commonProps from '#link/util/common-props.js';
-import { PlayStyle, getOsuInfo, oAuthGet, pushRoleMetadataForUser } from '#link/util/calls.js';
+import { PlayStyle, discordProvider, getOsuInfo, oAuthGet, osuProvider, pushRoleMetadataForUser, refreshAccessToken } from '#link/util/calls.js';
 import { Account } from '@prisma/client';
 
 // Initialize Express
@@ -44,7 +44,6 @@ app.get('/link', cookieParser(), async (req, res) => {
 	// If the user isn't signed in, send them to sign in with osu!
 	const session = await getSession(req);
 	if (!session || !session.user || !session.user.id) {
-		console.log(session);
 		// If the user doesn't have a CSRF token, send them to get one
 		// FIXME: This is a dumb workaround because right now there's no way for me to get a CSRF token serverside, because @auth/express doesn't expose a function for it.
 		if (!req.cookies['authjs.csrf-token']) {
@@ -64,16 +63,15 @@ app.get('/link', cookieParser(), async (req, res) => {
 		const user = await prisma.user.findUnique({
 			where: { id: session.user.id }
 		});
-		if (user == null) { return res.render('link/error', { error: 'An error occurred accessing the database. Please try again later.', ...commonProps }); }; // TODO: Sign the user out so they have to sign in again to maybe fix it?
+		if (user == null) { return res.render('link/error', { error: 'An error occurred accessing the database. Please try again later and get in touch if this keeps happening. (user == null)', ...commonProps }); }; // TODO: Sign the user out so they have to sign in again to maybe fix it?
 
-		const osuAccount = await prisma.account.findFirst({
+		let osuAccount: Account = await prisma.account.findFirst({
 			where: {
 				provider: 'osu',
 				userId: user.id
 			}
 		});
-		
-		const discordAccount = await prisma.account.findFirst({
+		let discordAccount: Account = await prisma.account.findFirst({
 			where: {
 				provider: 'discord',
 				userId: user.id
@@ -105,16 +103,35 @@ app.get('/link', cookieParser(), async (req, res) => {
 				});
 			}
 		} else {
-			// If the user has both an osu! and Discord account, send their role data to Discord\
+			// If the user has both an osu! and Discord account, send their role data to Discord
+
+			// But first, refresh their tokens:
+			try {
+				osuAccount = await refreshAccessToken(
+					osuProvider, 
+					osuAccount,
+					process.env.LINK_OSU_CLIENT_ID, process.env.LINK_OSU_CLIENT_SECRET
+				);
+				
+				discordAccount = await refreshAccessToken(
+					discordProvider,
+					discordAccount,
+					process.env.LINK_DISCORD_CLIENT_ID, process.env.LINK_DISCORD_CLIENT_SECRET
+				);
+			} catch(err) {
+				if (err.name == 'AccountUnlinkedError') {
+					return res.render('link/error', { error: 'Your account has been unlinked — if this was a mistake, try linking it again.', ...commonProps });
+				} else {
+					console.error('Error refreshing tokens: ', err);
+				}
+			}
 
 			// /users/@me/connections
 			// /users/@me/guilds
 			// TODO! Get guilds and reddit
 
-			
-
 			try {
-				const osuInfo = await getOsuInfo(osuAccount.access_token, osuAccount.refresh_token);
+				const osuInfo = await getOsuInfo(osuAccount.access_token);
 
 				await prisma.user.update({
 					where: {
@@ -133,8 +150,35 @@ app.get('/link', cookieParser(), async (req, res) => {
 					return res.render('link/done', commonProps);
 				});
 			} catch (err) {
-				console.error('Error pushing role metadata to Discord: ', err);
-				return res.render('link/error', { error: 'An error occurred sending data to Discord: ' + err.message, ...commonProps });
+				if (err.name == 'AccountUnauthorizedError') {
+					try {
+						await refreshAccessToken(
+							osuProvider, 
+							osuAccount,
+							process.env.LINK_OSU_CLIENT_ID, process.env.LINK_OSU_CLIENT_SECRET,
+							true // force
+						);
+						
+						await refreshAccessToken(
+							discordProvider,
+							discordAccount,
+							process.env.LINK_DISCORD_CLIENT_ID, process.env.LINK_DISCORD_CLIENT_SECRET,
+							true // force
+						);
+					} catch(err) {
+						if (err.name == 'AccountUnlinkedError') {
+							return res.render('link/error', { error: 'Your account has been unlinked — if this was a mistake, try linking it again.', ...commonProps });
+						} else {
+							console.error('Error refreshing tokens: ', err);
+						}
+					}
+
+					// Just send them to set-csrf to make their browser refresh to try again XD
+					return res.render('link/set-csrf', commonProps);
+				} else {
+					console.error('Error pushing role metadata to Discord: ', err);
+					return res.render('link/error', { error: 'An error occurred sending data to Discord: ' + err.message, ...commonProps });
+				}
 			}
 		}
 	}

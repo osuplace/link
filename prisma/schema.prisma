@@ -45,9 +45,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  isInOsuPlace   Boolean?
-  redditUsername String?
-
   osuInfo     String? // JSON of OsuInfo
   discordInfo String? // Json of DiscordInfo
 
