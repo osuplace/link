@@ -31,7 +31,8 @@
     "db:commit": "dotenv -e .env -c -- prisma migrate dev",
     "db:prod": "yarn db:client && dotenv -e .env -c -- prisma migrate deploy",
     "db:client": "dotenv -e .env -c -- prisma generate",
-    "db:studio": "dotenv -e .env -c -- prisma studio"
+    "db:studio": "dotenv -e .env -c -- prisma studio",
+    "service": "yarn install && yarn db:prod && yarn build && yarn start"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1",
