@@ -75,7 +75,7 @@ export async function getOsuInfo(accessToken: string, refreshToken: string) {
 		globalRank: osuProfile.statistics.global_rank,
 		countryRank: osuProfile.statistics.country_rank,
 		totalPP: osuProfile.statistics.pp,
-		playCount: osuProfile.statistics.playcount
+		playCount: osuProfile.statistics.play_count
 	} as OsuInfo;
 }
 
