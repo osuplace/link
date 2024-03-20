@@ -39,7 +39,7 @@ installLink.searchParams.set('client_id', process.env.LINK_DISCORD_CLIENT_ID);
 installLink.searchParams.set('scope', 'applications.commands bot');
 installLink.searchParams.set('permissions', '0');
 
-app.get('/', (req, res) => res.render('index', { installLink, ...commonProps }));
+app.get('/', async (req, res) => res.render('index', { installLink, userCount: await prisma.user.count(), ...commonProps }));
 app.get('/privacy', (req, res) => res.render('privacy', commonProps));
 
 // Routes
