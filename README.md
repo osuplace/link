@@ -12,12 +12,16 @@ Link is a Discord Connection service to allow you to connect your osu! account t
 	3. This is gonna take like 5 minutes so go get a snack in the meantime :3
 	4. Change all the dependencies that use `workspace:` in `packages/frameworks-express` and `packages/adapter-prisma` to use `file:` relative paths instead (i.e. `file:../core`).
 3. Copy `.env.example` to `.env` and edit `.env` to configure the app
-4. `yarn db:push` (push database schema)
+4. Set up the database:
+	- In **development**, use `yarn db:dev` to generate the Prisma client and deploy the schema to your local database.
+		1. If you make changes to the Prisma schema, run `yarn db:dev` again to regenerate the client and deploy the changes to your local database
+		2. Then, before committing changes that modify the database schema, use `yarn db:commit` to generate migration files
+		- Remember, you can use `yarn db:studio` to open Prisma Studio, a GUI to view and edit the database.
+	- In **production**, use `yarn db:prod` to generate the Prisma client and deploy the migration files.
 5. `yarn build` (compile TypeScript)
+	1. You might see some errors within `@auth`, but those don't actually affect anything for us, so just ignore them.
 6. `yarn register` (registers role metadata with Discord)
 7. `yarn start`
-
-Note: Unfortunately, because `@auth/express` uses an outdated version of `@auth/core` right now, there are a bunch of errors that you have to just ignore...
 
 ## Development 
 

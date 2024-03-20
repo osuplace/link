@@ -26,10 +26,10 @@
     "build": "tsc",
     "start": "node .",
     "register": "node dist/script/register.js",
-    "db:push": "dotenv -e .env -c -- prisma db push",
-    "db:migrate:dev": "dotenv -e .env -c -- prisma migrate dev",
-    "db:migrate:prod": "dotenv -e .env -c -- prisma migrate deploy",
-    "db:generate": "dotenv -e .env -c -- prisma generate",
+    "db:dev": "dotenv -e .env -c -- prisma db push",
+    "db:commit": "dotenv -e .env -c -- prisma migrate dev",
+    "db:prod": "yarn db:client && dotenv -e .env -c -- prisma migrate deploy",
+    "db:client": "dotenv -e .env -c -- prisma generate",
     "db:studio": "dotenv -e .env -c -- prisma studio"
   },
   "devDependencies": {
