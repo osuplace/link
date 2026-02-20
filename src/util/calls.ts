@@ -136,7 +136,7 @@ export async function getOsuInfo(accessToken: string) {
 		}
 
 		let playstyles: PlayStyle[] = [];
-		osuProfile.playstyle.forEach((style: string) => {
+		(osuProfile.playstyle ?? []).forEach((style: string) => {
 			switch(style) {
 				case 'keyboard':
 					playstyles.push(PlayStyle.Keyboard);
