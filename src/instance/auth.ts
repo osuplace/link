@@ -17,7 +17,11 @@ let authConfig: Omit<AuthConfig, "raw"> = {
 			clientSecret: process.env.LINK_DISCORD_CLIENT_SECRET,
 			authorization: 'https://discord.com/api/oauth2/authorize?scope=identify+connections+guilds+role_connections.write&prompt=consent',
 			checks: ['state'], // PKCE is not allowed with role_connections.write -- see https://github.com/discord/discord-api-docs/issues/5751
-
+			// Discord sends `iss` on the OAuth callback (RFC 9207), and oauth4webapi rejects it unless it matches the
+			// provider's issuer. Without this Auth.js falls back to "https://authjs.dev", and every Discord sign-in fails
+			// with `unexpected "iss" (issuer) response parameter value`.
+			// Safe to set: the token and userinfo URLs are explicit, so Auth.js doesn't run OIDC discovery against it.
+			issuer: 'https://discord.com',
 		}),
 		OsuProvider({
 			clientId: process.env.LINK_OSU_CLIENT_ID,
