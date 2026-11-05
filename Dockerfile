@@ -1,4 +1,8 @@
 # syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
+
+# The skip is for AUTH_TRUST_HOST, which the linter flags for having AUTH in its
+# name. It's a boolean, not a secret; secrets come from .env at runtime.
 
 # ── 1. The Auth.js fork ──────────────────────────────────────────────────────
 # auth.js/ is a git submodule (clone with --recurse-submodules). It has to be
