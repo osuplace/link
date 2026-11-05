@@ -23,7 +23,11 @@ import { Account } from '@prisma/client';
 
 // Initialize Express
 let app = express();
-app.set('trust proxy', 'loopback');
+// Which proxies to believe X-Forwarded-For/-Proto from. This decides req.ip (the per-IP rate limit below) and
+// req.protocol (https, which the __Host- CSRF cookie needs). 'loopback' suits a reverse proxy on the same machine;
+// behind cloudflared in its own container it has to be a hop count ('1'), or every visitor shares one bucket.
+const trustProxy = process.env.LINK_TRUST_PROXY || 'loopback';
+app.set('trust proxy', /^\d+$/.test(trustProxy) ? parseInt(trustProxy) : trustProxy);
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(rateLimit({

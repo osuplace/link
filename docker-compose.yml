@@ -1,0 +1,67 @@
+# Running link behind a Cloudflare tunnel.
+#
+#   cp .env.example .env              # fill it in, including TUNNEL_TOKEN
+#   mkdir -p data && cp /path/to/old/database.db data/   # moving from the old server
+#   sudo chown -R 1000:1000 data      # the container runs as uid 1000 (node)
+#   docker compose up -d
+#   docker compose run --rm link node dist/script/register.js   # once per Discord app
+#
+# Updating:
+#
+#   docker compose pull && docker compose up -d
+#
+# To run something that isn't on GHCR yet, build it under the same name:
+#   docker build -t ghcr.io/osuplace/link:latest .
+#
+#   internet ──> Cloudflare ──tunnel──> link ──> data/database.db
+#
+# Nothing publishes a port to the host: the tunnel dials out, and it is the
+# only way in.
+#
+# Setting the tunnel up, once, in the Cloudflare dashboard:
+#
+#   Zero Trust → Networks → Tunnels → Create a tunnel → Cloudflared
+#   Copy the token into TUNNEL_TOKEN in .env
+#   Public hostname:  link.osu.place  →  HTTP  →  link:3000
+#
+# That hostname is what LINK_BASEURL has to be (https://link.osu.place), because
+# both OAuth providers redirect back to it. If it changes, change these too:
+#   Discord app → OAuth2 → Redirects:            {LINK_BASEURL}/auth/callback/discord
+#   Discord app → Linked Roles Verification URL: {LINK_BASEURL}/link
+#   osu! OAuth app → Application Callback URL:   {LINK_BASEURL}/auth/callback/osu
+#
+# Moving from the old server: stop link there before copying database.db, or
+# the copy can miss writes still in SQLite's journal. Then move the DNS record
+# over to the tunnel (the dashboard offers to when the hostname already exists).
+
+services:
+  link:
+    # Built and pushed by .github/workflows/publish.yml. Pin LINK_IMAGE_TAG to a
+    # main-<sha> tag in production so a redeploy can't pick up a build you didn't
+    # mean to; rolling back is changing it back.
+    image: ghcr.io/osuplace/link:${LINK_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Inside the container. The tunnel reaches it as link:3000.
+      LINK_PORT: '3000'
+      # cloudflared is the one proxy in front of this, in its own container,
+      # and it appends the real client address to X-Forwarded-For. With the old
+      # default ('loopback') link would see cloudflared's address on every
+      # request, and everyone would share one 25-per-minute rate limit. Too high
+      # and a client can forge a fresh bucket per request with its own header.
+      LINK_TRUST_PROXY: '1'
+    volumes:
+      # SQLite lives here. A bind mount rather than a named volume so the
+      # database is a plain file you can back up and copy in from the old server.
+      - ./data:/app/data
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env}
+    depends_on:
+      link:
+        condition: service_healthy

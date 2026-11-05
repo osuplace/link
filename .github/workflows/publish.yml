@@ -1,0 +1,73 @@
+name: Publish image
+
+# Builds link into a container and pushes it to GHCR as ghcr.io/osuplace/link.
+#
+# Every push to main becomes :main, :main-<sha> and :latest, and a v* tag
+# becomes a real version. The sha tag is the one to deploy: it names exactly one
+# build, so rolling back is changing a string rather than remembering which
+# :main was which.
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ${{ github.repository }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The Auth.js fork. Without it the image has nothing to build auth from.
+          submodules: true
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Sign in to GHCR
+        # A pull request gets built to prove it can be, and pushes nothing: it
+        # would otherwise be a way for a fork to publish under our name.
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-,enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      # There are no tests or lint to run first: the build is the check. It
+      # typechecks src/ (yarn build) and fails if any of it doesn't compile.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          # arm64 as well as amd64: a Pi or an Ampere box is a plausible place
+          # for this to end up. The arm64 half builds under emulation, which is
+          # most of this job's time on a cold cache.
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

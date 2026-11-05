@@ -1,0 +1,21 @@
+**/node_modules
+**/.git
+**/.turbo
+**/.DS_Store
+*.log
+
+.env
+.env.*
+!.env.example
+
+/dist
+/data
+/.claude
+/.vscode
+/.yarn/install-state.gz
+/.yarn/cache
+
+# The Auth.js fork is a whole monorepo; the image only builds three packages out of it
+/auth.js/apps
+/auth.js/docs
+/auth.js/.github
